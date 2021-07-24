@@ -65,7 +65,8 @@ class Backbone(nn.Module):
 
     def forward(self, x, label=None):  # label is unused if self.cos_layer == 'no'
         x = self.base(x)
-        global_feat = nn.functional.avg_pool2d(x, x.shape[2:4])
+        global_feat = self.gap(x)
+        #global_feat = nn.functional.avg_pool2d(x, x.shape[2:4])
         global_feat = global_feat.view(global_feat.shape[0], -1)  # flatten to (bs, 2048)
         feat = self.bottleneck(global_feat)
 
@@ -80,6 +81,7 @@ class Backbone(nn.Module):
 
     def load_param(self, trained_path):
         param_dict = torch.load(trained_path)
+        print(param_dict)
         for i in param_dict:
             if 'classifier' in i or 'arcface' in i:
                 continue

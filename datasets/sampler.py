@@ -19,7 +19,9 @@ class RandomIdentitySampler(Sampler):
         self.batch_size = batch_size
         self.num_instances = num_instances
         self.num_pids_per_batch = self.batch_size // self.num_instances
+        # self.num_instances = cfg.NUM_IMG_PER_ID
         self.index_dic = defaultdict(list) #dict with list value
+
         #{783: [0, 5, 116, 876, 1554, 2041],...,}
         for index, (_, pid, _) in enumerate(self.data_source):
             self.index_dic[pid].append(index)

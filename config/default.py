@@ -15,12 +15,12 @@ class DefaultConfig:
         self.DEVICE_ID = "0"  # GPU IDs, i.e. "0,1,2" for multiple GPUs
 
         self.LOG_PERIOD = 50  # iteration of displaying training log
-        self.CHECKPOINT_PERIOD = 5  # saving model period
-        self.EVAL_PERIOD = 5  # validation period
-        self.MAX_EPOCHS = 200  # max training epochs
+        self.CHECKPOINT_PERIOD = 10  # saving model period
+        self.EVAL_PERIOD = 5 # validation period
+        self.MAX_EPOCHS = 120  # max training epochs
 
         # data
-        self.DATA_DIR = "/home/lujj/datasets/Market-1501-v15.09.15/"  # dataset path
+        self.DATA_DIR = '/mnt/nas59_data/sogang03_reid/'  # dataset path
         self.DATALOADER_NUM_WORKERS = 8  # number of dataloader workers
         self.SAMPLER = 'triplet'  # batch sampler, option: 'triplet','softmax'
         self.BATCH_SIZE = 64  # MxN, M: number of persons, N: number of images of per person
@@ -55,7 +55,7 @@ class DefaultConfig:
         self.CENTER_LR = 0.5  # learning rate for the weights of center loss
         self.MARGIN = 0.3  # triplet loss margin
 
-        self.STEPS = [40, 70, 130]
+        self.STEPS = [40, 70, 100]
         self.GAMMA = 0.1  # decay factor of learning rate
         self.WARMUP_FACTOR = 0.01
         self.WARMUP_EPOCHS = 10  # warm up epochs

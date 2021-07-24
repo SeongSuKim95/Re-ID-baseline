@@ -1,1 +1,8 @@
 /.idea
+/__pycache__
+/output
+*.pyc
+/runs
+*.pth
+*.txt
+/Pretrained_weight

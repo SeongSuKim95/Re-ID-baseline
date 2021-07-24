@@ -8,6 +8,9 @@ import torch.nn as nn
 from utils.meter import AverageMeter
 from utils.metrics import R1_mAP
 
+from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter('runs/')
 
 def do_train(cfg,
              model,
@@ -40,12 +43,13 @@ def do_train(cfg,
 
     evaluator = R1_mAP(num_query, max_rank=50, feat_norm=cfg.FEAT_NORM)
     # train
+    
+    n_total_steps = len(train_loader)
     for epoch in range(1, epochs + 1):
         start_time = time.time()
         loss_meter.reset()
         acc_meter.reset()
         evaluator.reset()
-        scheduler.step()
         model.train()
         for n_iter, (img, vid) in enumerate(train_loader):
             optimizer.zero_grad()
@@ -54,6 +58,13 @@ def do_train(cfg,
             target = vid.to(device)
 
             score, feat = model(img, target)
+            # score = classifer score with BN feat
+            # feat = global feat by gap
+        
+
+            # print(f"Score shape : {score.size()}") # (Batch_size, ID class num)
+            # print(f"feat shape : {feat.size()}") # (Batch_size, feature_size(2048))
+            # print(f"vid shape : {target.size()}") #  (Batch_size)
             loss = loss_fn(score, feat, target)
 
             loss.backward()
@@ -66,12 +77,15 @@ def do_train(cfg,
             acc = (score.max(1)[1] == target).float().mean()
             loss_meter.update(loss.item(), img.shape[0])
             acc_meter.update(acc, 1)
-
+            
             if (n_iter + 1) % log_period == 0:
                 logger.info("Epoch[{}] Iteration[{}/{}] Loss: {:.3f}, Acc: {:.3f}, Base Lr: {:.2e}"
                             .format(epoch, (n_iter + 1), len(train_loader),
                                     loss_meter.avg, acc_meter.avg, scheduler.get_lr()[0]))
-
+                writer.add_scalar('Training loss', loss_meter.avg, epoch * n_total_steps + n_iter)
+                writer.add_scalar('Accuracy', acc_meter.avg,epoch)
+                writer.add_scalar('Learning rate',scheduler.get_lr()[0],epoch)
+        scheduler.step()
         end_time = time.time()
         time_per_batch = (end_time - start_time) / (n_iter + 1)
         logger.info("Epoch {} done. Time per batch: {:.3f}[s] Speed: {:.1f}[samples/s]"
@@ -94,6 +108,7 @@ def do_train(cfg,
             cmc, mAP, _, _, _, _, _ = evaluator.compute()
             logger.info("Validation Results - Epoch: {}".format(epoch))
             logger.info("mAP: {:.1%}".format(mAP))
+            writer.add_scalar('Validation mAP',mAP,epoch)
             for r in [1, 5, 10]:
                 logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
 
