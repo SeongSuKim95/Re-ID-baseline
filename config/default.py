@@ -15,9 +15,9 @@ class DefaultConfig:
         self.DEVICE_ID = "0"  # GPU IDs, i.e. "0,1,2" for multiple GPUs
 
         self.LOG_PERIOD = 50  # iteration of displaying training log
-        self.CHECKPOINT_PERIOD = 10  # saving model period
+        self.CHECKPOINT_PERIOD = 30 # saving model period
         self.EVAL_PERIOD = 5 # validation period
-        self.MAX_EPOCHS = 120  # max training epochs
+        self.MAX_EPOCHS = 140  # max training epochs
 
         # data
         self.DATA_DIR = '/mnt/nas59_data/sogang03_reid/'  # dataset path
@@ -55,7 +55,7 @@ class DefaultConfig:
         self.CENTER_LR = 0.5  # learning rate for the weights of center loss
         self.MARGIN = 0.3  # triplet loss margin
 
-        self.STEPS = [40, 70, 100]
+        self.STEPS = [40, 70, 100, 120]
         self.GAMMA = 0.1  # decay factor of learning rate
         self.WARMUP_FACTOR = 0.01
         self.WARMUP_EPOCHS = 10  # warm up epochs

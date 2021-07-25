@@ -25,16 +25,20 @@ class Config(DefaultConfig):
     def __init__(self):
         super(Config, self).__init__()
         self.CFG_NAME = 'baseline'
-        self.DATA_DIR = '/mnt/nas59_data/sogang03_reid/'
+        self.DATA_DIR = '/mnt/nas59_data/market1501/' # sogang03_reid: 324, market1501 : 751
         self.PRETRAIN_CHOICE = 'imagenet'
-        self.PRETRAIN_PATH = '/home/sungsu21/Reid-BagofTricks/person-reid-tiny-baseline/Pretrained_weight/resnet50-19c8e357.pth'
+        self.PRETRAIN_PATH = './Pretrained_weight/resnet50-19c8e357.pth'
 
+        self.MODEL_PRETRAIN_PATH = './output/resnet50_120.pth'
+        
         self.LOSS_TYPE = 'triplet+softmax+center'
         self.TEST_WEIGHT = './Pretrained_weight/sogang03.pth'
         self.FLIP_FEATS = 'off'
         self.HARD_FACTOR = 0.2
         self.RERANKING = True
         self.DEVICE_ID = "1"
+
+
 
 # class Config(DefaultConfig):
 #     def __init__(self):
